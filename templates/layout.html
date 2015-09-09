@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>layout</title>
+	</head>
+		<body>
+			{% with messages = get_flashed_messages() %}
+				{% for message in messages %}
+					<p style="color:red">{{message}}</p>
+				{% endfor %}
+			{% endwith %}
+			{% block body %}{% endblock %}
+			{% if current_user %}
+			<form method="POST" action ="/logout">
+				<button type="submit">logout</button>
+			</form>
+			{% else %}
+			<a href="/login">login</a>
+			{% endif %}
+			<a href="/signup">sign up</a>
+		</body>
+</html>
