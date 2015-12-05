@@ -1,0 +1,4 @@
+jquery
+bootstrap
+underscore
+backbone
