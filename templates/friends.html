@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>Friends</h2>
+{% for friend in user.friends %}
+	<p>{{friend.username}}</p>
+{% endfor %}
+{% endblock %}

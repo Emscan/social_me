@@ -19,14 +19,23 @@ class User(db.Model):
 	posts = db.relationship('Post', backref='user')
 	comments = db.relationship('Comment', backref='user')
 	verified = db.Column(db.Boolean, default=False, nullable=False)
-	friends = db.relationship('User', secondary=friendships, primaryjoin=(friendships.c.friend_id1==id), secondaryjoin=(friendships.c.friend_id2==id))
+	friends = db.relationship('User', secondary=friendships, 
+		primaryjoin=(friendships.c.friend_id1==id), 
+		secondaryjoin=(friendships.c.friend_id2==id))
+	sent_requests = db.relationship('FriendshipRequest', backref='sender', 
+		primaryjoin=(FriendshipRequest.requesting_id==id))
+	received_requests = db.relationship('FriendshipRequest', backref='receiver', 
+		primaryjoin=(FriendshipRequest.requested_id==id))
+	fb_user_id = db.Column(db.BigInteger, unique=True)
 
 	def make_friend(self, friend):
-		self.friends.append(friend)
-		friend.friends.append(self)
-		db.session.add(self, friend)
-		db.session.commit()
-		
+		try:
+			self.friends.append(friend)
+			friend.friends.append(self)
+			db.session.add(self, friend)
+			db.session.commit()
+		except:
+			db.session.rollback()
 
 	def generate_token(self):
 		serializer = Serializer(app.config['SECRET_KEY'], expires_in=3600)
@@ -39,6 +48,12 @@ class User(db.Model):
 			g.current_user = self
 			return True
 		return None
+
+	def fb_login(self):
+		token = self.generate_token()
+		session['token'] = token
+		g.current_user = self
+		return True
 
 	def verify_password(self, password):
 		return bcrypt.hashpw(password.encode('utf-8'), self.password_hash.encode('utf-8')) == self.password_hash
@@ -54,6 +69,10 @@ class User(db.Model):
 	@classmethod
 	def from_email(cls, email):
 		return cls.query.filter(cls.email == email).first()
+
+	@classmethod
+	def from_fb_user_id(cls, fb_user_id):
+		return cls.query.filter(cls.fb_user_id == fb_user_id).first()
 
 	@classmethod
 	def create(cls, **kwargs):
@@ -74,3 +93,4 @@ class User(db.Model):
 		if data['user_id']:
 			return cls.query.get(data['user_id'])
 		return None
+

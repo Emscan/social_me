@@ -1,8 +1,10 @@
-{% extends layout.html %}
+{% extends "layout.html" %}
 {% block body %}
-	{% if current_user %}
-		<h3>Hello, {{user.first_name}} {{user.last_name}}</h3>
-		<p>{{user.username}}</p>
+	{% if g.current_user %}
+		<h3>Hello, {{g.current_user.first_name}} {{g.current_user.last_name}}</h3>
+		<p>{{g.current_user.username}}</p>
+		<p><a href="/friends">Your Friends</a></p>
+		<p><a href="/users">Other Users</a></p>
 	{% endif %}
-	{}
+	
 {% endblock %}

@@ -2,8 +2,9 @@
 {% block body %}
 	<h2>Login</h2>
 	<form method="POST" action="/login">
+		{{csrf_helper()}}
 		<p><input name="email" type="email" placeholder="email" /></p>
-		<p><input name="password" type="password" placehoder="password" /></p>
+		<p><input name="password" type="password" placeholder="password" /></p>
 		<p><button type="submit">SUBMIT</button>
 	</form>
 {% endblock %}

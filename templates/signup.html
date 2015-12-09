@@ -2,6 +2,7 @@
 {% block body %}
 <h3>Sign Up!</h3>
 <form method="POST" action="/signup">
+	{{csrf_helper()}}
 	<p><input name="first_name" type="text" placeholder="first name" /></p>
 	<p><input name="last_name" type="text" placeholder="last name" /></p>
 	<p><input name="username" type="text" placeholder="pick a username" /></p>

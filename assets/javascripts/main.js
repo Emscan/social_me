@@ -1,9 +1,15 @@
-jquery
-bootstrap
-underscore
-backbone
+Social = {
+	Models: {},
+	Views: {},
+	Collections: {},
+	Routers: {},
 
+	initialize = function () {
+		Social.router = new Socail.Routers.Router();
+		Backbone.history.start()
+	}
+};
 
-virtual environment pip install.
-
-login as guest user who has a bunch of friends
+$(document).ready(function () {
+	Social.initialize();
+})
