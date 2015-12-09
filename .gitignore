@@ -2,3 +2,4 @@ virt/*
 config.py
 *.pyc
 homework.txt
+.DS_store
