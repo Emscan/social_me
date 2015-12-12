@@ -1,15 +1,18 @@
 import bcrypt
 from datetime import datetime
 from db import db
-from flask import abort, Blueprint, flash, Flask, g, Markup, redirect, render_template, request, session
+from flask import abort, Blueprint, flash, Flask, g, Markup, redirect, render_template, request, session, send_from_directory
 from functools import wraps
 from helpers import *
 from models import *
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from blueprints import *
+import jft
+import json
 
 app = Flask(__name__)
 app.config.from_object('config')
+jft.init(app)
 
 db.create_all()
 
@@ -33,8 +36,15 @@ def csrf_protect():
 		if not token or not form_token or token != form_token:
 			abort(403)
 
-@app.route('/homepage')
-@logged_in
+@app.route('/assets/<path:path>')
+def assets(path):
+	path_split = path.split('/')
+	folder = '/'.join(path_split[:-1])
+	filename = path_split[-1]
+	return send_from_directory('assets/{0}/'.format(folder), filename)
+
+@app.route('/')
+# @logged_in
 def homepage():
 	return render_template('homepage.html')
 
@@ -45,6 +55,11 @@ def index():
 	if user:
 		username = User.username
 	return render_template('index.html', username=username, current_user=user)
+
+@app.route('/users')
+def users():
+	users = User.query.all()
+	return json.dumps([u.serializable(includes=['id', 'username', 'first_name', 'last_name', 'email'], relationships={'posts':{}, 'comments':{}, 'friends':{'includes': ['username']}}) for u in users])
 
 app.register_blueprint(auth.auth, session=session, g=g)
 app.register_blueprint(user.user, session=session, g=g)

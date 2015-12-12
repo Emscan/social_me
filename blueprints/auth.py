@@ -35,7 +35,7 @@ def fb_oauth():
 		user.fb_login()
 		session['user_id'] = user.id
 		flash('You were successfully logged in with facebook')
-		return redirect('/homepage')
+		return redirect('/')
 	else:
 		session['fb_user_id'] = fb_user_id
 		flash('user does not exist, please sign-up')
@@ -56,7 +56,7 @@ def login():
 		if valid_login:
 			session['user_id'] = user.id
 			flash('You were successfully logged in')
-			return redirect('/homepage')
+			return redirect('/')
 		else:
 			flash('login failed, please try again')
 			return redirect('/login')

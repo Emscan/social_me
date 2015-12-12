@@ -4,8 +4,8 @@ Social = {
 	Collections: {},
 	Routers: {},
 
-	initialize = function () {
-		Social.router = new Socail.Routers.Router();
+	initialize: function () {
+		Social.router = new Social.Routers.Router();
 		Backbone.history.start()
 	}
 };

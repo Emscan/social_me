@@ -3,12 +3,12 @@ from db import db
 import bcrypt
 from friendships import *
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
+from model_serializabler import Serializabler
 
 app = Flask(__name__)
 app.config.from_object('config')
 
-
-class User(db.Model):
+class User(db.Model, Serializabler):
 	__tablename__ = 'users'
 	id = db.Column(db.Integer, primary_key=True)
 	first_name = db.Column(db.String(100), index=True, nullable=False)
@@ -16,15 +16,15 @@ class User(db.Model):
 	username = db.Column(db.String(100), unique=True, index=True, nullable=False)
 	email = db.Column(db.String(255), unique=True, index=True, nullable=False)
 	password_hash = db.Column(db.String(255), unique=True, index=True, nullable=False)
-	posts = db.relationship('Post', backref='user')
-	comments = db.relationship('Comment', backref='user')
+	posts = db.relationship('Post', backref='user', lazy=False)
+	comments = db.relationship('Comment', backref='user', lazy=False)
 	verified = db.Column(db.Boolean, default=False, nullable=False)
-	friends = db.relationship('User', secondary=friendships, 
+	friends = db.relationship('User', secondary=friendships, lazy=False, 
 		primaryjoin=(friendships.c.friend_id1==id), 
 		secondaryjoin=(friendships.c.friend_id2==id))
-	sent_requests = db.relationship('FriendshipRequest', backref='sender', 
+	sent_requests = db.relationship('FriendshipRequest', backref='sender', lazy=False, 
 		primaryjoin=(FriendshipRequest.requesting_id==id))
-	received_requests = db.relationship('FriendshipRequest', backref='receiver', 
+	received_requests = db.relationship('FriendshipRequest', backref='receiver', lazy=False, 
 		primaryjoin=(FriendshipRequest.requested_id==id))
 	fb_user_id = db.Column(db.BigInteger, unique=True)
 

@@ -1,8 +1,5 @@
-{% extends "layout.html" %}
-{% block body %}
 <h3>Sign Up!</h3>
 <form method="POST" action="/signup">
-	{{csrf_helper()}}
 	<p><input name="first_name" type="text" placeholder="first name" /></p>
 	<p><input name="last_name" type="text" placeholder="last name" /></p>
 	<p><input name="username" type="text" placeholder="pick a username" /></p>
@@ -12,4 +9,3 @@
 	<p><input name="confirm_password" type="password" placeholder="confirm password" /></p>
 	<p><button type="submit">SUBMIT</button></p>
 </form>
-{% endblock %}

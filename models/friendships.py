@@ -1,11 +1,12 @@
 from flask import Flask
 from db import db
+from model_serializabler import Serializabler
 
 friendships = db.Table('friendships', 
 	db.Column('friend_id1', db.Integer, db.ForeignKey('users.id')),
 	db.Column('friend_id2', db.Integer, db.ForeignKey('users.id')))
 
-class FriendshipRequest(db.Model):
+class FriendshipRequest(db.Model, Serializabler):
 	__tablename__ = 'friendship_requests'
 	id = db.Column(db.Integer, primary_key=True)
 	requesting_id = db.Column(db.Integer, db.ForeignKey('users.id'))

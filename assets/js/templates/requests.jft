@@ -1,7 +1,5 @@
-{% extends "layout.html" %}
-{% block body %}
 <h3>Pending Friend Requests</h3>
-{% for request in pending_requests %}
+{% for request in pending_requests %} 
 	{{request.receiver.username}}
 	<form method="POST" action="/requests/cancel">
 		<input name="request_id" type="hidden" value="{{request.id}}" />
@@ -19,4 +17,14 @@
 		<p><button type="submit">ACCEPT REQUEST</button></p>
 	</form>
 {% endfor %}
-{% endblock %}
+
+
+
+
+<% pending_requests.each(function (request) { %>
+	<%= request.get(receiver.get(username)) %>
+	<form method="POST" action="/requests/cancel">
+		<input name="request_id" type="hidden" value="<%= request.get(id) %>" />
+		<p><button type="submit">CANCEL REQUEST</button></p>
+	</form>
+<% }) %>
